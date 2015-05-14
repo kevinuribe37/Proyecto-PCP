@@ -1,0 +1,158 @@
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+import javax.swing.*;
+
+public class Concursante  {
+	
+
+	public static void main (String args []){
+		new Paneles();
+
+		}
+	
+		
+}
+class Paneles extends Frame {
+	private JPanel panelArriba, panelCentro, panelAbajo;
+	private JLabel etiqueta1, etiqueta2, etiqueta3, etiqueta4;
+	private JLabel et1,et2,et3, et4;
+	
+	private JButton b1;
+	private JTextArea masTexto;
+	private JScrollPane sc;
+	private JButton boton1, boton2;
+
+	public void construirPanelArriba(){
+		etiqueta1 = new JLabel("Nombre del concursante");
+		etiqueta2 = new JLabel("                                                               ID de Concursante");
+		panelArriba = new JPanel();
+		panelArriba.setBackground(Color.BLUE);
+		etiqueta1.setForeground(Color.YELLOW);
+		etiqueta2.setForeground(Color.YELLOW);
+		panelArriba.add(etiqueta1);
+		panelArriba.add(etiqueta2);
+		
+	}
+
+	public void construirPanelCentral(){
+		panelCentro = new JPanel();
+		panelCentro.setLayout(new BorderLayout(100,100));
+		panelCentro.setBackground(Color.BLUE);
+
+		//Creamos un String que va a contener todo el texto del archivo
+		String texto="";
+
+		try
+		{
+		//Creamos un archivo FileReader que obtiene lo que tenga el archivo
+		FileReader lector=new FileReader("Instrucciones.txt");
+
+		//El contenido de lector se guarda en un BufferedReader
+		BufferedReader contenido=new BufferedReader(lector);
+
+		//Con el siguiente ciclo extraemos todo el contenido del objeto "contenido" y lo mostramos
+		while((texto=contenido.readLine())!=null)
+		{
+		masTexto = new JTextArea(texto);
+		}
+		}
+
+		//Si se causa un error al leer cae aqui
+		catch(Exception e)
+		{
+		System.out.println("Error al leer");
+		}
+		
+		sc = new JScrollPane(masTexto);
+		etiqueta3 = new JLabel("");
+		etiqueta4 = new JLabel("");
+		//boton = new JButton(" Picale start :P ");
+		panelCentro.add(sc, BorderLayout.CENTER);
+		panelCentro.add(etiqueta3, BorderLayout.WEST);
+		panelCentro.add(etiqueta4, BorderLayout.EAST);
+		//panelCentro.add(boton, BorderLayout.SOUTH);
+	}
+
+	public void construirPanelAbajo(){
+		panelAbajo = new JPanel();
+		panelAbajo.setLayout(new BorderLayout(180,10));
+		panelAbajo.setBackground(Color.BLUE);;
+		boton1 = new JButton(new ImageIcon("RP.PNG"));
+		boton1.setBackground(Color.BLUE);
+		boton1.setBorderPainted(false);
+		boton1.setRolloverIcon(new ImageIcon("RP_1.PNG"));
+		boton1.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evento){
+				masTexto.setText("");
+			}
+		});
+		boton2 = new JButton(new ImageIcon("ES.PNG"));
+		boton2.setBackground(Color.BLUE);
+		boton2.setBorderPainted(false);
+		boton2.setRolloverIcon(new ImageIcon("ES_1.PNG"));
+		boton2.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent evento){
+				Runtime cmd = Runtime.getRuntime();
+				try{
+					Process process=cmd.exec(masTexto.getText());
+					BufferedReader read = new BufferedReader (new InputStreamReader(process.getInputStream()));
+					masTexto.setText("");
+					
+					String linea;
+					
+					while((linea=read.readLine())!=null){
+						masTexto.append(linea+"\n");
+					}
+				}
+				catch(Exception ex){
+					JOptionPane.showMessageDialog(boton2, ex.getMessage());
+				}
+							}
+		});
+		JPanel panelInterno = new JPanel();
+		panelInterno.setLayout(new FlowLayout());
+		panelInterno.setBackground(Color.BLUE);
+		
+		panelInterno.add(boton1);
+		panelInterno.add(boton2);
+		et1 = new JLabel("");
+		et2 = new JLabel("");
+		et3 = new JLabel("");
+		et4 = new JLabel("");
+		panelAbajo.add(panelInterno, BorderLayout.CENTER);
+		panelAbajo.add(et1, BorderLayout.NORTH);
+		panelAbajo.add(et2, BorderLayout.SOUTH);
+		//panelAbajo.add(et3, BorderLayout.WEST);
+		//panelAbajo.add(et4, BorderLayout.EAST);
+	}
+	public void construirVentana(){
+		JFrame frame = new JFrame();
+		frame.setSize(500,500);
+		frame.setLayout(new BorderLayout());
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		frame.add(panelArriba, BorderLayout.NORTH);
+		frame.add(panelCentro, BorderLayout.CENTER);
+		frame.add(panelAbajo, BorderLayout.SOUTH);
+		
+		frame.setVisible(true);
+	}
+
+	public Paneles(){
+		construirPanelArriba();
+		construirPanelCentral();
+		construirPanelAbajo();
+		construirVentana();
+		repaint();
+	 }
+}
+
+
+
