@@ -129,7 +129,7 @@ class Paneles extends Frame {
 		panelAbajo.add(et2, BorderLayout.SOUTH);
 		//panelAbajo.add(et3, BorderLayout.WEST);
 		//panelAbajo.add(et4, BorderLayout.EAST);
-	}
+	}//
 	public void construirVentana(){
 		JFrame frame = new JFrame();
 		frame.setSize(500,500);
